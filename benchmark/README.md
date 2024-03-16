@@ -50,6 +50,7 @@
 ##### Mysql
 
 Mysql版本为8.0.26，修改配置如下：
+```
 innodb_buffer_pool_size = 24GB
 innodb_log_file_size = 2GB
 innodb_read_io_threads=16
@@ -60,12 +61,14 @@ table_open_cache=2000
 thread_cache_size=8
 tmp_table_size=256M
 max_heap_table_size=256M
+```
 
 ## 建表细节
 
 
 ##### Mysql 
 
+```sql
 CREATE TABLE finance (
     stock_name SMALLINT UNSIGNED NOT NULL,
     date_time DATETIME NOT NULL,
@@ -80,6 +83,7 @@ CREATE TABLE finance (
 )
 PARTITION BY HASH(stock_name)
 PARTITIONS 2048;  -- 分区量根据数据规模不同调整，尽量保持各分区物理空间在100M上下
+```
 
 ## 测试工程结构
 
