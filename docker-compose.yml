@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  qdata:
+    build: .
+    ports:
+      - "8300:8300"
+    depends_on:
+      - kvrocks
+
+  kvrocks:
+    image: apache/kvrocks:2.7.0
+    ports:
+      - "6666:6666"
+    volumes:
+      - kvrocks-data:/kvrocks_data
+
+volumes:
+  kvrocks-data:
