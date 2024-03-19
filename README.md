@@ -1,5 +1,7 @@
 # Project7730
 
+#### [中文文档](https://github.com/GoodManWEN/Project7730/blob/main/README_zh.md)
+
 ##### PART.A
 A high-performance data abstraction layer for handling specific time-series tasks, utilizing clustered logic and simplifying addressing and retrieval operations based on a KV database backend.
 
