@@ -201,8 +201,8 @@ Parameter Description：
 - `method`\[`int`\]: Method to be stress tested on the target, options include `ping`, `data_get`, `data_set`, `data_del`, etc.
 - `args`\[`Tuple[Any]`\]: Parameters for the target method, only supports positional parameter input, does not support keyword parameters. Default is `()`
 
-## 简易文档
-客户端API使用手册
+## Basic Documentation
+Client API User Manual
 
 ##### ping
 Test server response, default will only return "pong". In stress testing, this module can achieve over 100,000 QPS for ping responses on a single machine.
