@@ -216,6 +216,21 @@ Parameter Description：
 - `method`\[`int`\]: Method to be stress tested on the target, options include `ping`, `data_get`, `data_set`, `data_del`, etc.
 - `args`\[`Tuple[Any]`\]: Parameters for the target method, only supports positional parameter input, does not support keyword parameters. Default is `()`
 
+## Solution Analysis
+
+### Advantages
+
+- Lower resource usage: Can reduce system resource usage by about 50%. Compared to traditional relational database solutions, under stress tests, the system's CPU and disk usage rates drop from 80%/60% to around 30%/30%.
+- Improved read/write performance: Read performance can be referred to in detailed tests, and write performance is also improved. For inserting data on the scale of tens of billions, relational databases usually require more than 30 hours, while this solution only needs about 3 hours.
+- Indexing advantage: Rebuilding all data indexes on the scale of tens of billions only takes about 3 minutes (because after clustering the data, its index is actually a balanced tree on the scale of hundreds of millions, which achieves performance advantages)
+
+### Disadvantages
+- Limited flexibility, modifying the table structure requires changing the code in the response layer, from an application perspective, it means the logic between the model and the control part cannot be completely decoupled. If requirements change, both need to be modified simultaneously.
+- The presence of read and write amplification issues, making this solution less advantageous for small-scale global random read/write tasks.
+- The WAL mechanism is not conducive to frequent hot updates. Based on the append write strategy, global random read/write tasks may lead to excessive disk writes, requiring customized settings for the persistence strategy.
+
+
+
 ## Basic Documentation
 Client API User Manual
 
@@ -283,6 +298,12 @@ Batch insert data
 :return: 
 :rtype: int
 ```
+
+## Performance Benchmarks
+
+[Performance Benchmarks](https://github.com/GoodManWEN/Project7730/blob/main/benchmark/README-ZH.md) for further reference.
+
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-large-payload-mysql-vs-qdata-EjX7H.png?raw=true)
 
 ## Runtime Stack Analysis
 ![](https://github.com/GoodManWEN/Project7730/blob/main/misc/stack_analysis_1.png?raw=true)
