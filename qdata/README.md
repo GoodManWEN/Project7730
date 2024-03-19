@@ -216,7 +216,6 @@ Parameter Description：
 - `method`\[`int`\]: Method to be stress tested on the target, options include `ping`, `data_get`, `data_set`, `data_del`, etc.
 - `args`\[`Tuple[Any]`\]: Parameters for the target method, only supports positional parameter input, does not support keyword parameters. Default is `()`
 
-## Solution Analysis
 
 ## Solution Analysis
 
