@@ -63,7 +63,7 @@ class QDataService:
     def run_serve(self):
         processes = []
         for idx in range(self.core_num):
-            p = Process(target=QDataPool._run_serve, args=(self.host, self.port, self.db, self.redis_host, self.redis_port, self.core_bind, idx, self.plock))
+            p = Process(target=QDataService._run_serve, args=(self.host, self.port, self.db, self.redis_host, self.redis_port, self.core_bind, idx, self.plock))
             processes.append(p)
             p.start()
 
