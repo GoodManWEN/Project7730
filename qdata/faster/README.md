@@ -21,3 +21,6 @@ matuin develop --release
 ```
 from faster import *
 ```
+
+## 
+Pre-compiled file can only be used in amd64_pyton3.12/ubuntu_linux
