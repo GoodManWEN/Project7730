@@ -159,3 +159,14 @@ python benchmark.py --m mysql --c 4 --t 64 --s 30 --min 1 --max 100 --mtype long
 
 
 ## 测试结果
+
+#### 吞吐量
+##### 对于大批量搜索任务的吞吐量对比（Mysql vs Qdata）
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-large-payload-mysql-vs-qdata-EjX7H.png?raw=true)
+
+##### 对于小批量搜索任务的吞吐量对比（Mysql vs Qdata）
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-small-payload-mysql-vs-qdata-3ToHN.png?raw=true)
+
+
+
+## 结论与分析
