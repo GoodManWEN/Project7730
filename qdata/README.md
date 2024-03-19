@@ -115,7 +115,7 @@ base_client.py   base_server.py  <---- faster.so
 
 ## Installation
 
-Using Ubuntu/Debian as an example
+#### Install on Ubuntu/Debian as an example
 
 1. Pre-installation Environment
 ```shell
@@ -134,6 +134,21 @@ cd kvrocks
 3. Install qdata
 ```shell
 pip install git+https://github.com/GoodManWEN/Project7730.git@main
+```
+
+#### Docker try out
+
+Due to the UnionFS file system used by Docker, it may lead to significant performance degradation.
+
+1. Install docker-compose
+2. Clone Project
+```
+git clone https://github.com/GoodManWEN/Project7730.git
+cd Project7730
+```
+3. docker-compose up
+```
+docker-compose up --build
 ```
 
 ## Quick Start

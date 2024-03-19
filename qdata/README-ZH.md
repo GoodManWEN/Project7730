@@ -112,7 +112,7 @@ base_client.py   base_server.py  <---- faster.so
 
 ## 安装
 
-以Ubuntu/Debian为例
+#### 以Ubuntu/Debian为例
 
 1. 预装环境
 ```shell
@@ -132,6 +132,22 @@ cd kvrocks
 ```shell
 pip install git+https://github.com/GoodManWEN/Project7730.git@main
 ```
+
+#### Docker试用
+
+由于docker的UnionFS文件系统的原因，可能带来性能严重的下降。
+
+1. 安装 docker-compose
+2. 下载项目
+```
+git clone https://github.com/GoodManWEN/Project7730.git
+cd Project7730
+```
+3. 运行
+```
+docker-compose up --build
+```
+
 
 ## 快速开始
 
