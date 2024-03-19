@@ -7,8 +7,7 @@
 - 各平台细节配置
 - 建表细节
 - 工程说明
-- 测试结果
-- 分析与结论
+- 结论
 
 
 ## 测试项目概述
@@ -159,3 +158,5 @@ python benchmark.py --m mysql --c 4 --t 64 --s 30 --min 1 --max 100 --mtype long
 ```
 
 
+## 结论
+详参 [BenchmarkResults](https://github.com/GoodManWEN/Project7730/blob/main/docs/BenchmarkResults_zh.md)

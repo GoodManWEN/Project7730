@@ -9,8 +9,7 @@
 - Detailed Configuration of Each Platform
 - Table Creation Details
 - Project Description
-- Test Results
-- Analysis and Conclusion
+- Results
 
 
 ## Overview of Test Items
