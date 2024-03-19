@@ -265,3 +265,7 @@ if __name__ == '__main__':
 :return: 
 :rtype: int
 ```
+
+## 栈运行时间分析
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/stack_analysis_1.png?raw=true)
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/stack_analysis_2.png?raw=true)
