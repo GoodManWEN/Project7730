@@ -1,0 +1,8 @@
+loguru==0.7.2
+numpy==1.26.4
+orjson==3.9.15
+pybase64==1.0.0
+zstandard==0.22.0
+redis==5.0.3
+psutil==5.9.8
+pipeit
