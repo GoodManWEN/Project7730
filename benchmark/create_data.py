@@ -4,16 +4,18 @@ import aiomysql
 import os
 import datetime
 from loguru import logger
-from controler import MySQLControler
+from controler import MySQLControler, QDataControler
 from collections import deque
 import uuid
 import time
-from utils import generate_random_data
+from utils import generate_random_data, qdata_numpy_process
 import argparse
+
 
 def load_args():
     parser = argparse.ArgumentParser(description='Process some inputs.')
     
+    parser.add_argument('--m', help='mode:mysql/qdata/oracle,etc.', default='mysql', type=str, required=False)
     parser.add_argument('--c', help='cores', default=0, type=int, required=False)
     parser.add_argument('--t', help='threads', default=20, type=int, required=False)
     parser.add_argument('--host', help='mysql host', default='127.0.0.1', type=str, required=False)
@@ -28,6 +30,7 @@ def load_args():
     return parser.parse_args()
 
 args = load_args()
+PROGRAM_MODE = args.m
 PROCESS_COUNT = int(os.cpu_count())
 LOGGER_ALLOWED = True
 CORE_NUM = args.c if args.c != 0 else PROCESS_COUNT
@@ -42,8 +45,10 @@ START_STOCK_ID = args.start
 END_STOCK_ID = args.end
 
 async def run_worker(pid: int, pidx: int, loop: asyncio.BaseEventLoop, task_queue, result_queue, logger):
-
-    ctrl = MySQLControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    if PROGRAM_MODE == 'mysql':
+        ctrl = MySQLControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    elif PROGRAM_MODE == 'qdata':
+        ctrl = QDataControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     await ctrl.create_connection(loop)
 
     count = 0
@@ -55,7 +60,7 @@ async def run_worker(pid: int, pidx: int, loop: asyncio.BaseEventLoop, task_queu
         if task is None: # None 作为停止信号
             break
 
-        await ctrl.insertion(task)
+        r = await ctrl.insertion(task)
 
         result_queue.put_nowait([tid, "Task completed"])
 
@@ -131,7 +136,10 @@ class ProcessPool:
             self.result_queue.get()
 
 async def initialize(loop):
-    ctrl = MySQLControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    if PROGRAM_MODE == 'mysql':
+        ctrl = MySQLControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    elif PROGRAM_MODE == 'qdata':
+        ctrl = QDataControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     await ctrl.create_connection(loop)
     await ctrl.initialize()
     await ctrl.shutdown()
@@ -148,16 +156,28 @@ def main():
     process_pool.start_processes()
 
 
+
     start_stock_id = START_STOCK_ID
     end_stock_id = END_STOCK_ID
-    step = 10
-    insert_batch_size = 2000
-    for stock_id in range(start_stock_id, end_stock_id+1, 10):
-        data_to_insert = generate_random_data(stock_id, min(stock_id+step-1, end_stock_id))
-        for rid in range(0, len(data_to_insert), insert_batch_size):
-            process_pool.tasks.append(data_to_insert[rid: rid+2000])
-        
-        results = process_pool.run_until_complete()
+    if PROGRAM_MODE == 'mysql':
+        step = 10
+        insert_batch_size = 2000
+        for stock_id in range(start_stock_id, end_stock_id+1, 10):
+            data_to_insert = generate_random_data(stock_id, min(stock_id+step-1, end_stock_id))
+            for rid in range(0, len(data_to_insert), insert_batch_size):
+                process_pool.tasks.append(data_to_insert[rid: rid+insert_batch_size])
+            results = process_pool.run_until_complete()
+
+    elif PROGRAM_MODE == 'qdata':
+        insert_batch_size = 10
+        for stock_id in range(start_stock_id, end_stock_id+1):
+            data_to_insert = generate_random_data(stock_id, stock_id)
+            data_to_insert = qdata_numpy_process(data_to_insert)
+
+            for rid in range(0, len(data_to_insert), insert_batch_size):
+                process_pool.tasks.append(data_to_insert[rid: rid+insert_batch_size])
+            
+            results = process_pool.run_until_complete()
 
     process_pool.stop_processes()
     process_pool.join_processes()
@@ -165,3 +185,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+   

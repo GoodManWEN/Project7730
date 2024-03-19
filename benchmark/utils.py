@@ -3,6 +3,7 @@ from pipeit import *
 import datetime
 import math
 import random
+from datetime import datetime as dt_type
 
 def generate_random_data_single(stock_id):
     # 生成平均分布的随机数矩阵
@@ -77,6 +78,9 @@ class SearchCenter(object):
         idx2 = round(random.random() * (len(self.time_list) - 1))
         return self.post_date_period2(self.date_list[idx], self.date_list[idx], self.time_list[idx2], self.time_list[idx2])
     
+    def random_datetime3(self):
+        return datetime.datetime.combine(random.sample(self.date_list, 1)[0], random.sample(self.time_list, 1)[0])
+    
     def post_date_period(self, date1, date2):
         return date1.strftime('%Y-%m-%d') + ' 00:00:00', date2.strftime('%Y-%m-%d') + ' 23:59:59'
     
@@ -85,3 +89,22 @@ class SearchCenter(object):
     
     def random_stock_name(self, min_id, max_id):
         return str(random.randint(min_id, max_id))
+
+def qdata_numpy_process(data_to_insert: list):
+    dtype = [
+        ('stock_name', np.uint16), 
+        ('time', 'datetime64[s]'), 
+        ('value1', np.uint16), 
+        ('value2', np.uint16),
+        ('value3', np.uint16),
+        ('value4', np.uint16),
+        ('value5', np.uint32),
+        ('value6', np.uint32),
+        ('value7', np.uint16)
+    ]
+    for idx in range(len(data_to_insert)):
+        data_to_insert[idx] = tuple(data_to_insert[idx])
+    arr = np.array(data_to_insert, dtype=dtype)
+    # 以240行为一组，拆分
+    out: list = np.split(arr, len(arr) // 240) | Map(lambda x: [str(x[0][0]).zfill(6), x[0][1].astype(dt_type).date().strftime("%Y%m%d"), x.tobytes()]) | list
+    return out

@@ -6,8 +6,8 @@ import re
 import json
 import numpy as np
 
-LOG_DIR = r'.\results'
-LOG_DIR = os.path.abspath(LOG_DIR)
+LOG_DIR = os.path.dirname(os.path.abspath(__file__))
+LOG_DIR = os.path.abspath(os.path.join(LOG_DIR, "..", "results"))
 
 
 def bench_latency(arr):
