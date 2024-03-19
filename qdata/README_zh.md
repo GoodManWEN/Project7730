@@ -302,7 +302,7 @@ if __name__ == '__main__':
 
 ## 性能测试
 
-详情请参考[性能测试](https://github.com/GoodManWEN/Project7730/blob/main/benchmark/README-ZH.md)
+详情请参考[性能测试](https://github.com/GoodManWEN/Project7730/blob/main/benchmark/README_zh.md)
 
 ![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-large-payload-mysql-vs-qdata-EjX7H.png?raw=true)
 

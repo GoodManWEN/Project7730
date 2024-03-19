@@ -306,7 +306,7 @@ Batch insert data
 
 ## Performance Benchmarks
 
-[Performance Benchmarks](https://github.com/GoodManWEN/Project7730/blob/main/benchmark/README-ZH.md) for further reference.
+[Performance Benchmarks](https://github.com/GoodManWEN/Project7730/blob/main/benchmark/README.md) for further reference.
 
 ![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-large-payload-mysql-vs-qdata-EjX7H.png?raw=true)
 
