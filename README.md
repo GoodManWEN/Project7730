@@ -14,6 +14,7 @@ Neural network analysis engineering based on large-scale data (to be refined)
 
 ## Performance Showcase
 ![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-large-payload-mysql-vs-qdata-EjX7H.png?raw=true)
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_query-latency-top-50-75-90-99nAn8m.png?raw=true)
 
 ## Documentation
 
