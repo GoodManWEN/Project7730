@@ -26,7 +26,7 @@ A high-performance data component for handling specific time-series tasks. The b
 10. Basic rate limiting and circuit breaking mechanisms.
 11. Containerized deployment.
 
-## 架构示意图
+## Architecture
 
 ```
 +--------+             +--------+            +--------+
