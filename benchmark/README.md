@@ -125,6 +125,7 @@ rocksdb.compaction_readahead_size=524288
 - `--start`, \[`int`\]: 插入覆盖数据条目左边界
 - `--end`, \[`int`\]: 插入覆盖数据条目左边界
 
+范例：
 ```shell
 # 插入标题为1-100的数据，总行数在1200万行左右
 python create_data.py --m mysql --c 4 --model mysql --start 1 --end 100 --init 1
@@ -149,6 +150,7 @@ python create_data.py --m mysql --c 4 --model mysql --start 101 --end 1000
 - `--mtype`,
 - `--o`, \[`string`\]: 输出文件
 
+范例：
 ```shell
 # 分别进行payload分别为100B和100KB的随机读写测试
 python benchmark.py --m mysql --c 4 --t 64 --s 30 --min 1 --max 100 --mtype short --o r_mysql_short_12M_4c_64t_30s_1.json
