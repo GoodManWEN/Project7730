@@ -160,13 +160,31 @@ python benchmark.py --m mysql --c 4 --t 64 --s 30 --min 1 --max 100 --mtype long
 
 ## 测试结果
 
-#### 吞吐量
-##### 对于大批量搜索任务的吞吐量对比（Mysql vs Qdata）
+### 吞吐量
+##### 在不同数据量下，对于大批量搜索任务的吞吐量对比（MySQL vs QData）
 ![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-large-payload-mysql-vs-qdata-EjX7H.png?raw=true)
 
-##### 对于小批量搜索任务的吞吐量对比（Mysql vs Qdata）
+##### 在不同数据量下，对于小批量搜索任务的吞吐量对比（MySQL vs QDdata）
 ![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-small-payload-mysql-vs-qdata-3ToHN.png?raw=true)
+
+### 延迟
+
+##### MySQL数据搜索延迟随时间变化趋势
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_mysql_long_latency.png?raw=true)
+
+##### QData数据搜索延迟随时间变化趋势
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qdata_long_latency.png?raw=true)
+
+##### 延迟对比情况（MySQL vs QData）
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_DataVolumevsQueryLatency(LargePayloads).png?raw=true)
+
+##### 分布结构对比
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_mysql_long_his.png?raw=true)
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qdata_long_his.png?raw=true)
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_query-latency-top-50-75-90-99nAn8m.png?raw=true)
 
 
 
 ## 结论与分析
+
+1. 
