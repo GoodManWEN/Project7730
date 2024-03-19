@@ -1,7 +1,7 @@
 # QData
 A high-performance data component for handling specific time-series tasks. The basic logic involves using clustering logic to simplify addressing and fetching operations based on a KV database backend.
 
-#### [中文文档](https://github.com/GoodManWEN/Project7730/blob/main/qdata/README-ZH.md)
+#### [中文文档](https://github.com/GoodManWEN/Project7730/blob/main/qdata/README_zh.md)
 
 
 ## Features
@@ -218,16 +218,21 @@ Parameter Description：
 
 ## Solution Analysis
 
+## Solution Analysis
+
 ### Advantages
 
-- Lower resource usage: Can reduce system resource usage by about 50%. Compared to traditional relational database solutions, under stress tests, the system's CPU and disk usage rates drop from 80%/60% to around 30%/30%.
-- Improved read/write performance: Read performance can be referred to in detailed tests, and write performance is also improved. For inserting data on the scale of tens of billions, relational databases usually require more than 30 hours, while this solution only needs about 3 hours.
-- Indexing advantage: Rebuilding all data indexes on the scale of tens of billions only takes about 3 minutes (because after clustering the data, its index is actually a balanced tree on the scale of hundreds of millions, which achieves performance advantages)
+- **Lower Resource Usage**: Can reduce system resource usage by about 50%. Compared to traditional relational database solutions, under stress tests, the system's CPU and hard disk usage rates dropped from 80%/60% to around 30%/30%.
+- **Improved Read and Write Performance**: Read performance can be referred to detailed tests, and write performance has also improved (detailed tests not conducted). For the insertion of tens of billions of data, relational databases usually need more than 30 hours, while this solution only takes about 3 hours.
+- **Indexing Advantage**: Rebuilding all data indexes under the scale of tens of billions of data only takes about 3 minutes (because after clustering the data, its index is essentially a balanced tree of a billion-scale, thus achieving performance advantage).
+- **Advantages of Data Sequential Structuring Solution**: Since the analysis engine relies on the Python ecosystem, converting the Python data structures retrieved from the database into Numpy or Pandas (or other) data structures is inevitable. Direct memory import and export, compared to structural computation, can increase speed by about a thousand times, reducing several milliseconds of computation time per request.
+- **Asynchronous Communication and IO Multiplexing Advantage**: The core->process->thread->coroutine model is a superior communication solution at present, combining development efficiency with operational efficiency advantages. According to the framework test provided by [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r20&hw=ph&test=fortune&l=zijzen-sf), the highest efficiency of dynamic language frameworks based on Python can reach about 70kqps with the Echo framework, while our solution's Echo efficiency can exceed 100kqps, improving performance by about 40% without using static compilation acceleration.
 
 ### Disadvantages
-- Limited flexibility, modifying the table structure requires changing the code in the response layer, from an application perspective, it means the logic between the model and the control part cannot be completely decoupled. If requirements change, both need to be modified simultaneously.
-- The presence of read and write amplification issues, making this solution less advantageous for small-scale global random read/write tasks.
-- The WAL mechanism is not conducive to frequent hot updates. Based on the append write strategy, global random read/write tasks may lead to excessive disk writes, requiring customized settings for the persistence strategy.
+- **Limited Flexibility**, modifying table structures while also having to change response layer code. From an application perspective, this means the logic relationship between the model and control parts cannot be completely decoupled. If requirements change, both need to be modified simultaneously.
+- **Amplification in Read and Write Operations**, making this solution less advantageous for small-scale global random read and write tasks.
+- **WAL Mechanism is Not Favorable for Frequent Hot Updates**, based on the append-write strategy, global random read and write tasks might lead to excessive disk writes, necessitating customized persistence strategies.
+
 
 
 
