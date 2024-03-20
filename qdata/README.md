@@ -190,8 +190,10 @@ Basic client usage
 from qdata import QDataClient
 
 async def main(client):
-   res = await conn.data_get(stock_name='000001', start_datetime='2020-01-01 09:30:00', end_datetime='2020-01-13 15:00:00', fields=None, frequency='5m', adjust=3,  limit=2000)
-   print(res)
+   async with client.connection() as conn:
+      await conn.login()
+      res = await conn.data_get(stock_name='000001', start_datetime='2020-01-01 09:30:00', end_datetime='2020-01-13 15:00:00', fields=None, frequency='5m', adjust=3,  limit=2000)
+      print(res)
 
 if __name__ == '__main__':
    client = QDataClient(host='127.0.0.1', port=8300, user='root', password='pw')
