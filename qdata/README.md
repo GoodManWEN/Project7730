@@ -258,9 +258,9 @@ Retrieve point data or collection data
 ```
 :param stock_name: Target code
 :type stock_name: str
-:param start_datetime: Target start time value, format "%Y-%m-%d %H:%M:%S"或"%Y-%m-%d"
+:param start_datetime: Target start time value, format "%Y-%m-%d %H:%M:%S" or "%Y-%m-%d"
 :type start_datetime: str
-:param end_datetime: Target end time value, format "%Y-%m-%d %H:%M:%S"或"%Y-%m-%d"
+:param end_datetime: Target end time value, format "%Y-%m-%d %H:%M:%S" or "%Y-%m-%d"
 :type end_datetime: str
 :param fields: Set of columns to include, optional `open`, `close`, `volume`, `amount`, etc., default is None to include all columns
 :type fields: Optional[List[str]]
@@ -280,7 +280,7 @@ Insert single data entry
 ```
 :param stock_name: Target code
 :type stock_name: str
-:param datetime: Target time value, format "%Y-%m-%d %H:%M:%S"或"%Y-%m-%d"
+:param datetime: Target time value, format "%Y-%m-%d %H:%M:%S" or "%Y-%m-%d"
 :type datetime: str
 :param payload: Modified content
 :type payload: bytes
@@ -294,7 +294,7 @@ Delete single data entry
 ```
 :param stock_name: Target Code
 :type stock_name: str
-:param datetime: Target time value, format "%Y-%m-%d %H:%M:%S"或"%Y-%m-%d"
+:param datetime: Target time value, format "%Y-%m-%d %H:%M:%S" or "%Y-%m-%d"
 :type datetime: str
 
 :return: 
