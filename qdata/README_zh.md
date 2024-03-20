@@ -133,6 +133,9 @@ cd kvrocks
 pip install git+https://github.com/GoodManWEN/Project7730.git@main
 ```
 
+4. 编译加速库
+[详参库编译部分](https://github.com/GoodManWEN/Project7730/blob/main/qdata/faster/README_zh.md)
+
 #### Docker试用
 
 由于docker的UnionFS文件系统的原因，可能带来性能严重的下降。

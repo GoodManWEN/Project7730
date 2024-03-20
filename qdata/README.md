@@ -151,6 +151,9 @@ cd Project7730
 docker-compose up --build
 ```
 
+4. Compile rust liberary
+[See this page for ruther reference](https://github.com/GoodManWEN/Project7730/blob/main/qdata/faster/README.md)
+
 ## Quick Start
 
 
