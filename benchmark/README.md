@@ -39,8 +39,15 @@ The data volumes (total number of rows) include five levels:
 - Billions
 - Tens of billions
 
-## Testing Platform: Direct Disk Access
+## Testing Platform: 
 
+CPU: AMD Ryzen 6800H
+Memory: 48/96GB (Mem/Swap)
+Storage: TiPlus 7100 2TB NVMe/PCEe 4.0
+OS: Ubuntu 22.04 (Under Hyper-V) + Direct Disk Access
+
+
+## Experimental details
 #### Mysql
 
 Mysql version = 8.0.26，settings modified as follow：
