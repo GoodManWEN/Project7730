@@ -4,7 +4,7 @@ import aiomysql
 import os
 import datetime
 from loguru import logger
-from controler import MySQLControler, QDataControler
+from controler import MySQLControler, QDataControler, OracleControler
 from collections import deque
 import uuid
 import time
@@ -49,6 +49,8 @@ async def run_worker(pid: int, pidx: int, loop: asyncio.BaseEventLoop, task_queu
         ctrl = MySQLControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     elif PROGRAM_MODE == 'qdata':
         ctrl = QDataControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    elif PROGRAM_MODE == 'oracle':
+        ctrl = OracleControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     await ctrl.create_connection(loop)
 
     count = 0
@@ -140,6 +142,8 @@ async def initialize(loop):
         ctrl = MySQLControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     elif PROGRAM_MODE == 'qdata':
         ctrl = QDataControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    elif PROGRAM_MODE == 'oracle':
+        ctrl = OracleControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     await ctrl.create_connection(loop)
     await ctrl.initialize()
     await ctrl.shutdown()

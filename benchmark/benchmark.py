@@ -62,6 +62,8 @@ async def run_worker(pid: int, pidx: int, loop: asyncio.BaseEventLoop, task_queu
         ctrl = MySQLControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     elif program_mode == 'qdata':
         ctrl = QDataControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    elif PROGRAM_MODE == 'oracle':
+        ctrl = OracleControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     await ctrl.create_connection(loop)
 
     _ = task_queue.get()

@@ -4,6 +4,7 @@ import datetime
 import math
 import random
 from datetime import datetime as dt_type
+import os
 
 def generate_random_data_single(stock_id):
     # 生成平均分布的随机数矩阵
@@ -48,6 +49,7 @@ class SearchCenter(object):
         super(SearchCenter, self).__init__()
         self.date_list = self.generate_date()
         self.time_list = self.generate_time()
+        random.seed(int.from_bytes(os.urandom(4), 'little'))
     
     def generate_date(self):
         d0 = datetime.date(2020, 1, 1)

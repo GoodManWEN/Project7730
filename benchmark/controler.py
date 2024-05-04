@@ -212,3 +212,110 @@ class QDataControler(BaseControler):
     async def benchmark_countdown(self, seconds: int, logger):
         await asyncio.sleep(seconds)
         self.open_benchmark = False
+
+        
+
+class OracleControler(BaseControler):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+    async def create_connection(self, loop = None):
+        dsn = cx_Oracle.makedsn(host="localhost", port=1521, service_name='orcl')
+        self.pool = cx_Oracle.SessionPool(user="system", password="123456", dsn=dsn, min=2, max=5, increment=1, encoding="UTF-8")
+        self.connected = True
+
+    async def initialize(self):
+        conn = pool.acquire()
+        cur = conn.cursor()
+        cur.execute("""DROP TABLE IF EXISTS finance""")
+        cur.execute("""
+            CREATE TABLESPACE user_data
+            DATAFILE
+            'C:\\userdata\\user_data01.dbf' SIZE 30G,
+            'C:\\userdata\\user_data02.dbf' SIZE 30G,
+            'C:\\userdata\\user_data03.dbf' SIZE 30G,
+            'C:\\userdata\\user_data04.dbf' SIZE 30G,
+            'C:\\userdata\\user_data05.dbf' SIZE 30G,
+            'C:\\userdata\\user_data06.dbf' SIZE 30G,
+            'C:\\userdata\\user_data07.dbf' SIZE 30G,
+            'C:\\userdata\\user_data08.dbf' SIZE 30G,
+            'C:\\userdata\\user_data09.dbf' SIZE 30G,
+            'C:\\userdata\\user_data10.dbf' SIZE 30G,
+            'C:\\userdata\\user_data11.dbf' SIZE 30G,
+            'C:\\userdata\\user_data12.dbf' SIZE 30G
+            AUTOEXTEND ON NEXT 1G MAXSIZE UNLIMITED
+            LOGGING
+            ONLINE
+            EXTENT MANAGEMENT LOCAL SEGMENT SPACE MANAGEMENT AUTO
+        """)
+        cur.execute("""
+            CREATE USER testuser IDENTIFIED BY password
+            DEFAULT TABLESPACE user_data
+            TEMPORARY TABLESPACE temp
+            QUOTA 360G ON user_data
+        """)
+        cur.execute("""GRANT CREATE SESSION, CREATE TABLE TO testuser""")
+        cur.execute("""ALTER USER system DEFAULT TABLESPACE user_data""") # DEFAULT SYSTEM/DEFAULT TEMP: TEMP
+        cur.execute("""ALTER USER system QUOTA 360G ON user_data""")
+        r = cur.execute("""
+            SELECT USERNAME, DEFAULT_TABLESPACE, TEMPORARY_TABLESPACE FROM USER_USERS
+        """)
+        # self.logger.debug(r)
+        cur.execute("""
+            CREATE TABLE finance (
+              stock_name NUMBER NOT NULL,
+              date_time DATE NOT NULL,
+              open NUMBER NOT NULL,
+              close NUMBER NOT NULL,
+              high NUMBER NOT NULL,
+              low NUMBER NOT NULL,
+              volume NUMBER NOT NULL,
+              amount NUMBER NOT NULL,
+              turn NUMBER NOT NULL,
+              PRIMARY KEY (stock_name, date_time)
+            )
+            PARTITION BY HASH(stock_name) PARTITIONS 512
+            TABLESPACE user_data
+        """)
+        conn.commit()
+
+
+    async def benchmark_thread(self, stock_name_min, stock_name_max, mtypeshort: bool, logger):
+        self.open_benchmark = True
+        res = []
+        sc = SearchCenter()
+
+        conn = pool.acquire()
+        cur = conn.cursor()
+
+        while self.open_benchmark:
+            rsn = sc.random_stock_name(stock_name_min, stock_name_max)
+            if mtypeshort:
+                t1, t2 = sc.random_date_period2()
+            else:
+                t1, t2 = sc.random_date_period()
+            st_ts = time.perf_counter()
+            cur.execute("""SELECT stock_name, date_time, open, close, high, low, volume, amount, turn FROM finance WHERE stock_name = :1 AND date_time BETWEEN TO_DATE(:2, 'YYYY-MM-DD HH24:MI:SS') AND TO_date(:3, 'YYYY-MM-DD HH24:MI:SS')""", (1, t1, t2))
+            r = cur.fetchall()
+            ed_ts = time.perf_counter()
+            res.append([ed_ts - st_ts, len(r), time.time_ns()])
+        return res
+
+
+    async def benchmark(self, thread_num: int = 1, seconds: int = 10, stock_name_min=1, stock_name_max=1, mtype: str='short', logger = None):
+        if mtype == 'short':
+            mtypeshort = True
+        else:
+            mtypeshort = False
+        threads = [self.benchmark_thread(stock_name_min, stock_name_max, mtypeshort, logger) for _ in range(thread_num)]
+        self.loop.create_task(self.benchmark_countdown(seconds=seconds, logger=logger))
+        res = await asyncio.gather(*threads)
+        ress = [] 
+        for r in res:
+            ress.extend(r)
+        return ress
+        
+    async def benchmark_countdown(self, seconds: int, logger):
+        await asyncio.sleep(seconds)
+        self.open_benchmark = False
