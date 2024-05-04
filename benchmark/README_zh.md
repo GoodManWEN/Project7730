@@ -110,6 +110,88 @@ rocksdb.compaction_readahead_size=524288
 ```
 
 
+#### OracleDB
+
+Oracle Database 版本号 19c (基于 Oracle Linux), 安装设置如下:
+
+sysctl.conf:
+```
+fs.file-max = 6815744
+kernel.sem = 250 32000 100 128
+kernel.shmmni = 4096
+kernel.shmall = 1073741824
+kernel.shmmax = 4398046511104
+kernel.panic_on_oops = 1
+net.core.rmem_default = 262144
+net.core.rmem_max = 4194304
+net.core.wmem_default = 262144
+net.core.wmem_max = 1048576
+net.ipv4.conf.all.rp_filter = 2
+net.ipv4.conf.default.rp_filter = 2
+fs.aio-max-nr = 1048576
+net.ipv4.ip_local_port_range = 9000 65500
+```
+
+oracle-database-preinstall-19c.conf:
+```
+oracle   soft   nofile    1024
+oracle   hard   nofile    65536
+oracle   soft   nproc    16384
+oracle   hard   nproc    16384
+oracle   soft   stack    10240
+oracle   hard   stack    32768
+oracle   hard   memlock    134217728
+oracle   soft   memlock    134217728
+```
+
+表空间操作:
+```sql
+CREATE TABLESPACE user_data
+DATAFILE
+'C:\\userdata\\user_data01.dbf' SIZE 32G,
+'C:\\userdata\\user_data02.dbf' SIZE 32G,
+'C:\\userdata\\user_data03.dbf' SIZE 32G,
+'C:\\userdata\\user_data04.dbf' SIZE 32G,
+'C:\\userdata\\user_data05.dbf' SIZE 32G,
+'C:\\userdata\\user_data06.dbf' SIZE 32G,
+'C:\\userdata\\user_data07.dbf' SIZE 32G,
+'C:\\userdata\\user_data08.dbf' SIZE 32G,
+'C:\\userdata\\user_data09.dbf' SIZE 32G,
+'C:\\userdata\\user_data10.dbf' SIZE 32G,
+'C:\\userdata\\user_data11.dbf' SIZE 32G,
+'C:\\userdata\\user_data12.dbf' SIZE 32G
+AUTOEXTEND ON NEXT 1G MAXSIZE UNLIMITED
+LOGGING
+ONLINE
+EXTENT MANAGEMENT LOCAL SEGMENT SPACE MANAGEMENT AUTO
+
+-- Granting tablespace privileges
+GRANT CREATE SESSION, CREATE TABLE TO testuser
+ALTER USER testuser DEFAULT TABLESPACE user_data
+ALTER USER testuser TEMP TABLESPACE TEMP
+ALTER USER testuser QUOTA 384G ON user_data
+```
+
+
+创建表:
+```sql
+CREATE TABLE finance (
+    stock_name NUMBER NOT NULL,
+    date_time DATE NOT NULL,
+    open NUMBER NOT NULL,
+    close NUMBER NOT NULL,
+    high NUMBER NOT NULL,
+    low NUMBER NOT NULL,
+    volume NUMBER NOT NULL,
+    amount NUMBER NOT NULL,
+    turn NUMBER NOT NULL,
+    PRIMARY KEY (stock_name, date_time)
+)
+PARTITION BY HASH(stock_name) PARTITIONS 1024
+TABLESPACE user_data
+```
+
+
 ## 测试工程结构
 
 数据插入入口在`create_data.py`中，其中各数据库业务解耦在`controler.py`，其CLI参数如下：
