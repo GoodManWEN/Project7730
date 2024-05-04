@@ -14,7 +14,7 @@ appender = ddb.TableAppender(dbPath="dfs://test", tableName="finance", ddbSessio
 
 
 
-for stock_id in range(1, 35001):
+for stock_id in range(1,11):
     data = generate_random_data_single(stock_id, False)
     # type convertion
     stock_id, date_time, open_, close, high, low, volume, amount, turn = [], [], [], [], [], [], [], [], []
