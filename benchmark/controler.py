@@ -5,6 +5,9 @@ import time
 from utils import SearchCenter
 import redis.asyncio as redis
 from qdata import QDataClient
+import dolphindb as ddb
+import cx_Oracle
+import pandas as pd
 
 class BaseControler:
 
@@ -281,6 +284,15 @@ class OracleControler(BaseControler):
         conn.commit()
 
 
+    async def insertion(self, data):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor() as cur:
+                await cur.executemany(f"""
+                    INSERT INTO finance(stock_name, date_time, open, close, high, low, volume, amount, turn) VALUES (:1, TO_DATE(:2, 'YYYY-MM-DD HH24:MI:SS'), :3, :4, :5, :6, :7, :8, :9)
+                """, data)
+            await conn.commit()
+
+
     async def benchmark_thread(self, stock_name_min, stock_name_max, mtypeshort: bool, logger):
         self.open_benchmark = True
         res = []
@@ -298,6 +310,115 @@ class OracleControler(BaseControler):
             st_ts = time.perf_counter()
             cur.execute("""SELECT stock_name, date_time, open, close, high, low, volume, amount, turn FROM finance WHERE stock_name = :1 AND date_time BETWEEN TO_DATE(:2, 'YYYY-MM-DD HH24:MI:SS') AND TO_date(:3, 'YYYY-MM-DD HH24:MI:SS')""", (1, t1, t2))
             r = cur.fetchall()
+            ed_ts = time.perf_counter()
+            res.append([ed_ts - st_ts, len(r), time.time_ns()])
+        return res
+
+
+    async def benchmark(self, thread_num: int = 1, seconds: int = 10, stock_name_min=1, stock_name_max=1, mtype: str='short', logger = None):
+        if mtype == 'short':
+            mtypeshort = True
+        else:
+            mtypeshort = False
+        threads = [self.benchmark_thread(stock_name_min, stock_name_max, mtypeshort, logger) for _ in range(thread_num)]
+        self.loop.create_task(self.benchmark_countdown(seconds=seconds, logger=logger))
+        res = await asyncio.gather(*threads)
+        ress = [] 
+        for r in res:
+            ress.extend(r)
+        return ress
+        
+    async def benchmark_countdown(self, seconds: int, logger):
+        await asyncio.sleep(seconds)
+        self.open_benchmark = False
+
+
+class DolphinDBControler(BaseControler):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
+    async def create_connection(self, loop = None):
+        self.s = ddb.session()
+        self.s.connect("localhost", 8848, "admin", "123456")
+        self.pool = ddb.DBConnectionPool("localhost", 8848, 10, "admin", "123456", highAvailability=True, reConnect=True)
+        self.connected = True
+
+
+    async def initialize(self):
+        await self.pool.run("""
+            if(existsDatabase("dfs://test")) dropDatabase("dfs://test")
+                 create database "dfs://test" partitioned by HASH([INT, 1024]), engine='TSDB'
+                 
+            create table "dfs://test"."finance"(
+                    stock_id INT,
+                    date_time DATETIME[comment="time_col", compress="delta"],
+                    open FLOAT,
+                    close FLOAT,
+                    high FLOAT,
+                    low FLOAT,
+                    volumn DOUBLE,
+                    amount DOUBLE,
+                    turn DOUBLE
+                )
+                partitioned by stock_id,
+                sortColumns=[`stock_id, `date_time],
+                keepDuplicates=ALL
+
+            finance = loadTable("dfs://test","finance")
+            finance.schema()
+        """)
+
+
+    async def insertion(self, data):
+        pool = ddb.DBConnectionPool("localhost", 8848, 20, "admin", "123456")
+        appender = ddb.PartitionedTableAppender("dfs://test", "finance", partitionColName="stock_id", dbConnectionPool=self.pool)
+        
+        stock_id, date_time, open_, close, high, low, volume, amount, turn = [], [], [], [], [], [], [], [], []
+        for row in data:
+            stock_id.append(row[0])
+            date_time.append(row[1])
+            open_.append(row[2])
+            close.append(row[3])
+            high.append(row[4])
+            low.append(row[5])
+            volume.append(float(row[6]))
+            amount.append(float(row[7]))
+            turn.append(float(row[8]))
+
+
+        data = {
+            'stock_id': stock_id,
+            'date_time': date_time,
+            'open': open_,
+            'close': close,
+            'high': high,
+            'low': low,
+            'volume': volume,
+            'amount': amount,
+            'turn': turn
+        }
+        data = pd.DataFrame(data)
+        appender.append(data)
+    
+
+    async def benchmark_thread(self, stock_name_min, stock_name_max, mtypeshort: bool, logger):
+        self.open_benchmark = True
+        res = []
+        while self.open_benchmark:
+            sc = SearchCenter()
+            rsn = sc.random_stock_name(stock_name_min, stock_name_max)
+            if mtypeshort:
+                t1, t2 = sc.random_date_period2()
+            else:
+                t1, t2 = sc.random_date_period()
+            st_ts = time.perf_counter()
+
+            task = self.s.loadTableBySQL(tableName="finance", dbPath="dfs://test", sql=f"SELECT stock_id, date_time, open, close, high, low, volumn, amount, turn FROM finance WHERE stock_id = {rsn} AND (date_time BETWEEN {t1} AND {t2})")
+            view = await self.pool.runTaskAsync(task)
+            length = len(view.toList()[0])
+
             ed_ts = time.perf_counter()
             res.append([ed_ts - st_ts, len(r), time.time_ns()])
         return res

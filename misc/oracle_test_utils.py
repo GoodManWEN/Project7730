@@ -6,7 +6,7 @@ import random
 from datetime import datetime as dt_type
 import os
 
-def generate_random_data_single(stock_id):
+def generate_random_data_single(stock_id,  convert_time=True):
     # 生成平均分布的随机数矩阵
     arr = np.random.rand(240 * 250 * 2, 7)
     arr *= 10000  
@@ -33,9 +33,13 @@ def generate_random_data_single(stock_id):
 
     ld, lt = len(date_list), len(time_list)
     for idx in range(ld * lt):
-        arr[idx][1] = datetime.datetime.combine(date_list[idx // lt],time_list[idx % lt]).strftime('%Y-%m-%d %H:%M:%S')
+        if convert_time:
+            arr[idx][1] = datetime.datetime.combine(date_list[idx // lt],time_list[idx % lt]).strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            arr[idx][1] = datetime.datetime.combine(date_list[idx // lt],time_list[idx % lt])
         
     return arr
+
 
 class SearchCenter(object):
     def __init__(self):

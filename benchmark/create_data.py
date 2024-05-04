@@ -4,7 +4,7 @@ import aiomysql
 import os
 import datetime
 from loguru import logger
-from controler import MySQLControler, QDataControler, OracleControler
+from controler import MySQLControler, QDataControler, OracleControler, DolphinDBControler
 from collections import deque
 import uuid
 import time
@@ -51,6 +51,9 @@ async def run_worker(pid: int, pidx: int, loop: asyncio.BaseEventLoop, task_queu
         ctrl = QDataControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     elif PROGRAM_MODE == 'oracle':
         ctrl = OracleControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    elif PROGRAM_MODE == 'dolphindb':
+        ctrl = DolphinDBControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+
     await ctrl.create_connection(loop)
 
     count = 0
@@ -144,6 +147,8 @@ async def initialize(loop):
         ctrl = QDataControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     elif PROGRAM_MODE == 'oracle':
         ctrl = OracleControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
+    elif PROGRAM_MODE == 'dolphindb':
+        ctrl = DolphinDBControler(host=HOST, port=PORT, user=USER, password=PASSWORD, db=DB)
     await ctrl.create_connection(loop)
     await ctrl.initialize()
     await ctrl.shutdown()
@@ -182,6 +187,23 @@ def main():
                 process_pool.tasks.append(data_to_insert[rid: rid+insert_batch_size])
             
             results = process_pool.run_until_complete()
+    elif PROGRAM_MODE == 'oracle':
+        step = 10
+        insert_batch_size = 2000
+        for stock_id in range(start_stock_id, end_stock_id+1, 10):
+            data_to_insert = generate_random_data(stock_id, min(stock_id+step-1, end_stock_id))
+            for rid in range(0, len(data_to_insert), insert_batch_size):
+                process_pool.tasks.append(data_to_insert[rid: rid+insert_batch_size])
+            results = process_pool.run_until_complete()
+    elif PROGRAM_MODE == 'dolphindb':
+        step = 1
+        insert_batch_size = 120000
+        for stock_id in range(start_stock_id, end_stock_id+1, 10):
+            data_to_insert = generate_random_data(stock_id, min(stock_id+step-1, end_stock_id))
+            for rid in range(0, len(data_to_insert), insert_batch_size):
+                process_pool.tasks.append(data_to_insert[rid: rid+insert_batch_size])
+            results = process_pool.run_until_complete()
+
 
     process_pool.stop_processes()
     process_pool.join_processes()

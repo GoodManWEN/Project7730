@@ -1,7 +1,10 @@
-
 loguru==0.7.2
 numpy==1.26.4
 aiomysql==0.2.0
 uvloop==0.19.0
 redis==5.0.3
+pandas==2.2.2
+cx-Oracle==8.3.0
+cx-Oracle-async==0.3.3
+dolphindb==3.0.0.0
 pipeit

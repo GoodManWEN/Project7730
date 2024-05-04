@@ -1,16 +1,16 @@
-import cx_Oracle
 import threading
 from multiprocessing import Process, Queue
 import time
-from dolphindb_test_insert import SearchCenter
+from oracle_test_utils import SearchCenter
 from loguru import logger
 import sys
 from pipeit import *
 import json
+import dolphindb as ddb
 
 
 CORES = 7
-THREAD_NUM_PER_CORE = 10
+THREAD_NUM_PER_CORE = 8
 
 logger.remove()
 logger.add(sys.stdout, level="INFO")
@@ -19,12 +19,11 @@ def thread_handler(thread_id, bench_time, share_data, logger, start_perf_time):
     logger.debug("thread start")
     sc = SearchCenter()
 
-    dsn = cx_Oracle.makedsn(host="localhost", port=1521, service_name='orcl')
-    conn = cx_Oracle.connect(user="system", password="123456", dsn=dsn)
-    cur = conn.cursor()
-    r = cur.execute(r"""SELECT COUNT(*) FROM TEST""")
-    for row in cur:
-        ...
+
+    s = ddb.session()
+    s.connect("localhost", 8848, "admin", "123456")
+    r = s.run("1+1")
+
     current_perf_time = time.perf_counter()
     sleep_time = start_perf_time - current_perf_time
     time.sleep(sleep_time)
@@ -32,10 +31,12 @@ def thread_handler(thread_id, bench_time, share_data, logger, start_perf_time):
     while True:
         st_ts = time.perf_counter()
 
-        sn = sc.random_stock_name(1, 10000)
+        sn = sc.random_stock_name(1, 35000)
         t1, t2 = sc.random_date_period()
-        r = cur.execute("""SELECT stock_name, date_time, open, close, high, low, volume, amount, turn FROM finance WHERE stock_name = :1 AND date_time BETWEEN TO_DATE(:2, 'YYYY-MM-DD HH24:MI:SS') AND TO_date(:3, 'YYYY-MM-DD HH24:MI:SS')""", (sn, t1, t2))
-        length = len(r.fetchall())
+        t1 = t1.replace(' ', 'T').replace('-', '.')
+        t2 = t2.replace(' ', 'T').replace('-', '.')
+        view = s.loadTableBySQL(tableName="finance", dbPath="dfs://test", sql=f"SELECT stock_id, date_time, open, close, high, low, volumn, amount, turn FROM finance WHERE stock_id = {sn} AND (date_time BETWEEN {t1} AND {t2})")
+        length = len(view.toList()[2])
 
         et_ts = time.perf_counter()
         partition_data.append([et_ts - st_ts, length, time.time_ns()])
@@ -83,7 +84,7 @@ def main(idx):
     result_queue.close()
     result_queue.join_thread()
 
-    Write(f'r_oracle_long_1200M_7c_70t_30s_{idx+4}.json', json.dumps(results))
+    Write(f'r_dolphdb(tsdb)_long_4200M_{CORES}c_{CORES * THREAD_NUM_PER_CORE}t_30s_{idx}.json', json.dumps(results))
     
 if __name__ == '__main__':
     for i in range(3):
