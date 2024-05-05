@@ -191,6 +191,56 @@ PARTITION BY HASH(stock_name) PARTITIONS 1024
 TABLESPACE user_data
 ```
 
+#### DolphinDB
+
+DolphinDB 版本号： V3.0.0 社区版, 配置保持默认, 单实例配置.
+
+TSDB 引擎创建:
+```sql
+if(existsDatabase("dfs://test")) dropDatabase("dfs://test")
+     create database "dfs://test" partitioned by HASH([INT, 1024]), engine='TSDB'
+     
+create table "dfs://test"."finance"(
+    stock_id INT,
+    date_time DATETIME[comment="time_col", compress="delta"],
+    open FLOAT,
+    close FLOAT,
+    high FLOAT,
+    low FLOAT,
+    volumn DOUBLE,
+    amount DOUBLE,
+    turn DOUBLE
+)
+partitioned by stock_id,
+sortColumns=[`stock_id, `date_time],
+keepDuplicates=ALL
+
+finance = loadTable("dfs://test","finance")
+finance.schema()
+``` 
+
+OLAP 引擎创建:
+```sql
+if(existsDatabase("dfs://test")) dropDatabase("dfs://test")
+     create database "dfs://test" partitioned by HASH([INT, 1024]), engine='OLAP'
+     
+create table "dfs://test"."finance"(
+    stock_id INT,
+    date_time DATETIME[comment="time_col", compress="delta"],
+    open FLOAT,
+    close FLOAT,
+    high FLOAT,
+    low FLOAT,
+    volumn DOUBLE,
+    amount DOUBLE,
+    turn DOUBLE
+)
+partitioned by stock_id
+
+finance = loadTable("dfs://test","finance")
+finance.schema()
+```
+
 
 ## 测试工程结构
 

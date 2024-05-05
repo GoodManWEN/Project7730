@@ -192,6 +192,56 @@ PARTITION BY HASH(stock_name) PARTITIONS 1024
 TABLESPACE user_data
 ```
 
+#### DolphinDB
+
+DolphinDB Version V3.0.0 Community, configuration as default settings, stand alone mode.
+
+TSDB Engine Table Creation:
+```sql
+if(existsDatabase("dfs://test")) dropDatabase("dfs://test")
+     create database "dfs://test" partitioned by HASH([INT, 1024]), engine='TSDB'
+     
+create table "dfs://test"."finance"(
+    stock_id INT,
+    date_time DATETIME[comment="time_col", compress="delta"],
+    open FLOAT,
+    close FLOAT,
+    high FLOAT,
+    low FLOAT,
+    volumn DOUBLE,
+    amount DOUBLE,
+    turn DOUBLE
+)
+partitioned by stock_id,
+sortColumns=[`stock_id, `date_time],
+keepDuplicates=ALL
+
+finance = loadTable("dfs://test","finance")
+finance.schema()
+``` 
+
+OLAP Engine Table Creation:
+```sql
+if(existsDatabase("dfs://test")) dropDatabase("dfs://test")
+     create database "dfs://test" partitioned by HASH([INT, 1024]), engine='OLAP'
+     
+create table "dfs://test"."finance"(
+    stock_id INT,
+    date_time DATETIME[comment="time_col", compress="delta"],
+    open FLOAT,
+    close FLOAT,
+    high FLOAT,
+    low FLOAT,
+    volumn DOUBLE,
+    amount DOUBLE,
+    turn DOUBLE
+)
+partitioned by stock_id
+
+finance = loadTable("dfs://test","finance")
+finance.schema()
+```
+
 
 ## Test Project Structure
 
