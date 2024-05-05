@@ -8,7 +8,6 @@ from pipeit import *
 import json
 import dolphindb as ddb
 
-# time.sleep(150)
 
 CORES = 7
 THREAD_NUM_PER_CORE = 8
@@ -32,7 +31,7 @@ def thread_handler(thread_id, bench_time, share_data, logger, start_perf_time):
     while True:
         st_ts = time.perf_counter()
 
-        sn = sc.random_stock_name(1, 10)
+        sn = sc.random_stock_name(1, 35000)
         t1, t2 = sc.random_date_period()
         t1 = t1.replace(' ', 'T').replace('-', '.')
         t2 = t2.replace(' ', 'T').replace('-', '.')
@@ -85,7 +84,7 @@ def main(idx):
     result_queue.close()
     result_queue.join_thread()
 
-    Write(f'r_dolphdb(tsdb)_long_1M_{CORES}c_{CORES * THREAD_NUM_PER_CORE}t_30s_{idx+1}.json', json.dumps(results))
+    Write(f'r_dolphdb(olap)_long_4200M_4c_64t_30s_{idx+1}.json', json.dumps(results))
     
 if __name__ == '__main__':
     for i in range(3):

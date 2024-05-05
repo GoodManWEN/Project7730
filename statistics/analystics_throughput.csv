@@ -1,4 +1,24 @@
 bench_name, throughput
+r_dolphdb(olap)_long_1200M_4c_64t_30s,0.01
+r_dolphdb(olap)_long_120M_4c_64t_30s,109.9
+r_dolphdb(olap)_long_12M_4c_64t_30s,0.22
+r_dolphdb(olap)_long_1M_4c_64t_30s,0.22
+r_dolphdb(olap)_long_4200M_4c_64t_30s,3.32
+r_dolphdb(olap)_short_1200M_4c_64t_30s,0.01
+r_dolphdb(olap)_short_120M_4c_64t_30s,112.89
+r_dolphdb(olap)_short_12M_4c_64t_30s,0.22
+r_dolphdb(olap)_short_1M_4c_64t_30s,0.22
+r_dolphdb(olap)_short_4200M_4c_64t_30s,2.44
+r_dolphdb(tsdb)_long_1200M_4c_64t_30s,60.83
+r_dolphdb(tsdb)_long_120M_4c_64t_30s,65.83
+r_dolphdb(tsdb)_long_12M_4c_64t_30s,64.38
+r_dolphdb(tsdb)_long_1M_4c_64t_30s,76.9
+r_dolphdb(tsdb)_long_4200M_4c_64t_30s,55.81
+r_dolphdb(tsdb)_short_1200M_4c_64t_30s,0.12
+r_dolphdb(tsdb)_short_120M_4c_64t_30s,0.13
+r_dolphdb(tsdb)_short_12M_4c_64t_30s,0.15
+r_dolphdb(tsdb)_short_1M_4c_64t_30s,0.13
+r_dolphdb(tsdb)_short_4200M_4c_64t_30s,0.11
 r_mysql_long_1200M_4c_64t_30s,15.34
 r_mysql_long_120M_4c_64t_30s,15.54
 r_mysql_long_12M_4c_64t_30s,14.82
