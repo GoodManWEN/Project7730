@@ -14,8 +14,11 @@ Neural network analysis engineering based on large-scale data (to be refined)
 - High availability, secure communication features
 - Good horizontal scalability, supports containerized deployment
 
-## Performance Showcase
-![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_qps-with-large-payload-mysql-vs-qdata-EjX7H.png?raw=true)
+## Performance Comparison
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_latency-performance-under-multiple-data-volumes-payload1-100kb-barchart.png?raw=true)
+
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_latency-performance-under-multiple-data-volumes-payload1-100kb-linechart.png?raw=true)
+
 ![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_query-latency-top-50-75-90-99nAn8m.png?raw=true)
 
 ## Documentation
