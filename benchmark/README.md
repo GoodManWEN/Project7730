@@ -149,18 +149,18 @@ Tablespace operations:
 ```sql
 CREATE TABLESPACE user_data
 DATAFILE
-'C:\\userdata\\user_data01.dbf' SIZE 32G,
-'C:\\userdata\\user_data02.dbf' SIZE 32G,
-'C:\\userdata\\user_data03.dbf' SIZE 32G,
-'C:\\userdata\\user_data04.dbf' SIZE 32G,
-'C:\\userdata\\user_data05.dbf' SIZE 32G,
-'C:\\userdata\\user_data06.dbf' SIZE 32G,
-'C:\\userdata\\user_data07.dbf' SIZE 32G,
-'C:\\userdata\\user_data08.dbf' SIZE 32G,
-'C:\\userdata\\user_data09.dbf' SIZE 32G,
-'C:\\userdata\\user_data10.dbf' SIZE 32G,
-'C:\\userdata\\user_data11.dbf' SIZE 32G,
-'C:\\userdata\\user_data12.dbf' SIZE 32G
+'/usr/orcl/user_data01.dbf' SIZE 32G,
+'/usr/orcl/user_data02.dbf' SIZE 32G,
+'/usr/orcl/user_data03.dbf' SIZE 32G,
+'/usr/orcl/user_data04.dbf' SIZE 32G,
+'/usr/orcl/user_data05.dbf' SIZE 32G,
+'/usr/orcl/user_data06.dbf' SIZE 32G,
+'/usr/orcl/user_data07.dbf' SIZE 32G,
+'/usr/orcl/user_data08.dbf' SIZE 32G,
+'/usr/orcl/user_data09.dbf' SIZE 32G,
+'/usr/orcl/user_data10.dbf' SIZE 32G,
+'/usr/orcl/user_data11.dbf' SIZE 32G,
+'/usr/orcl/user_data12.dbf' SIZE 32G
 AUTOEXTEND ON NEXT 1G MAXSIZE UNLIMITED
 LOGGING
 ONLINE
