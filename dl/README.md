@@ -7,7 +7,8 @@
 | CNN + LSTM + CBAM | 0.0003162174993617968 |
 
 ## Data
-Accuracy of raw data: 5 minutes aggregation (dataset size 6.1GB), download address:, decompress password: `123`
+Accuracy of raw data: 5 minutes aggregation (dataset size 6.1GB), download address:[https://pan.baidu.com/s/130QLSgzWkNGyx51f2VXk6Q?pwd=bmvt](https://pan.baidu.com/s/130QLSgzWkNGyx51f2VXk6Q?pwd=bmvt) 
+, decompress password: `123`
 
 1. load data into QData
 2. Use `create_label.py`, `create_train_data1.py`, `create_train_data2.py` to process the raw data into a pre-training format suitable for training.

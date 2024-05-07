@@ -7,7 +7,7 @@
 | CNN + LSTM + CBAM | 0.0003162174993617968 |
 
 # 数据
-原始数据精度：5分钟聚合(数据集大小6.1GB)，下载地址：，解压密码:123
+原始数据精度：5分钟聚合(数据集大小6.1GB)，下载地址：[https://pan.baidu.com/s/130QLSgzWkNGyx51f2VXk6Q?pwd=bmvt](https://pan.baidu.com/s/130QLSgzWkNGyx51f2VXk6Q?pwd=bmvt)，解压密码:123
 
 1. 将数据载入QData
 2. 使用`create_label.py`, `create_train_data1.py`, `create_train_data2.py` 将原始数据处理为适合训练的预训练格式。
