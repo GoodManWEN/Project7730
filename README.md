@@ -19,7 +19,7 @@ Neural network analysis engineering based on large-scale data (to be refined)
 
 ![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_latency-performance-under-multiple-data-volumes-payload1-100kb-linechart.png?raw=true)
 
-![](https://github.com/GoodManWEN/Project7730/blob/main/misc/statistic_DataVolumevsQueryLatency(LargePayloads).png?raw=true)
+![](https://github.com/GoodManWEN/Project7730/blob/main/misc/paper/statistic_DataVolumevsQueryLatency(LargePayloads).png?raw=true)
 
 ## Documentation
 
