@@ -39,6 +39,16 @@ r_oracle_short_120M_4c_64t_30s,3.1
 r_oracle_short_12M_4c_64t_30s,3.95
 r_oracle_short_1M_4c_64t_30s,4.02
 r_oracle_short_4200M_4c_64t_30s,1.27
+r_postgresql_long_1200M_4c_64t_30s,76.55
+r_postgresql_long_120M_4c_64t_30s,95.68
+r_postgresql_long_12M_4c_64t_30s,113.53
+r_postgresql_long_1M_4c_64t_30s,117.44
+r_postgresql_long_4200M_4c_64t_30s,68.26
+r_postgresql_short_1200M_4c_64t_30s,1.09
+r_postgresql_short_120M_4c_64t_30s,1.85
+r_postgresql_short_12M_4c_64t_30s,3.45
+r_postgresql_short_1M_4c_64t_30s,3.47
+r_postgresql_short_4200M_4c_64t_30s,0.99
 r_qdata_long_1200M_4c_64t_30s,0.42
 r_qdata_long_120M_4c_64t_30s,0.6
 r_qdata_long_12M_4c_64t_30s,0.63

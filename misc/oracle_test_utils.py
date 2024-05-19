@@ -6,6 +6,8 @@ import random
 from datetime import datetime as dt_type
 import os
 
+random.seed(int(os.urandom(4).hex(), 16))
+
 def generate_random_data_single(stock_id,  convert_time=True):
     # 生成平均分布的随机数矩阵
     arr = np.random.rand(240 * 250 * 2, 7)
@@ -96,3 +98,5 @@ if __name__ == '__main__':
     c = generate_random_data_single(1)
     for _ in c:
         print(_)
+        break
+    print('------------------')
