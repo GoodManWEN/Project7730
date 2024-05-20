@@ -242,6 +242,42 @@ finance = loadTable("dfs://test","finance")
 finance.schema()
 ```
 
+#### PostgreSQL
+
+PostgreSQL version 16, modify the configuration as follows:
+```
+shared_buffers = 4GB                              
+effective_cache_size = 20GB                    
+work_mem = 64MB                                 
+maintenance_work_mem = 128MB         
+checkpoint_timeout = 20min	
+checkpoint_completion_target = 0.8
+max_locks_per_transaction = 256
+```
+
+Table Creation:
+```
+CREATE TABLE finance (
+    stock_name INTEGER NOT NULL,
+    date_time TIMESTAMP NOT NULL,
+    open INTEGER NOT NULL,
+    close INTEGER NOT NULL,
+    high INTEGER NOT NULL,
+    low INTEGER NOT NULL,
+    volume BIGINT NOT NULL,
+    amount BIGINT NOT NULL,
+    turn SMALLINT NOT NULL,
+    PRIMARY KEY (stock_name, date_time)
+) PARTITION BY HASH (stock_name);
+
+DO $$
+BEGIN
+    FOR i IN 0..2047 LOOP
+        EXECUTE format('CREATE TABLE finance_part_%s PARTITION OF finance FOR VALUES WITH (MODULUS 2048, REMAINDER %s);', i, i);
+    END LOOP;
+END $$;
+
+```
 
 ## Test Project Structure
 
